@@ -311,6 +311,8 @@ export async function main(ns) {
 				} else {
 					document.querySelector('.tabsDiv').insertAdjacentHTML('beforeend', tabHTML);
 				}
+				document.getElementById(rmBtnId).addEventListener('click', listener)
+				document.getElementById(tabId).addEventListener('click', listener);
 				activeTab.push(needToAdd);
 				needToAdd = '';
 			}
@@ -321,9 +323,9 @@ export async function main(ns) {
 			document.querySelector('.addBtn').addEventListener('click', listener);
 		}
 	}
-	
+
 	if (!document.getElementById('zavardo')) {
-		document.getElementById('root').insertAdjacentHTML('afterBegin','<a id="zavardo" style="display:none;" href="https://youtu.be/7ePWNmLP0Z0">what?1!</a>');
+		document.getElementById('root').insertAdjacentHTML('afterBegin', '<a id="zavardo" style="display:none;" href="https://youtu.be/7ePWNmLP0Z0">what?1!</a>');
 	}
 	//loop needed to add new btns to new log windows
 	while (!stop) {

@@ -24,7 +24,7 @@ export async function main(ns) {
 		+ '.removeTab:hover {background:rgb(49 0 0)} '
 		+ '.addBtn { display: inline-flex;-webkit-box-align: center;align-items: center;-webkit-box-pack: center;justify-content: center;position: relative;box-sizing: border-box;-webkit-tap-highlight-color: transparent;outline: 0px;margin-right: 6px;cursor: pointer;user-select: none;vertical-align: middle;appearance: none;text-decoration: none;text-transform: none;font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", Consolas, "Courier New", Courier, monospace, "Times New Roman";font-weight: 500;font-size: 0.875rem;line-height: 1.75;min-width: 28px;padding: 6px 8px;transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;color: rgb(195, 195, 195);background-color: rgb(59 129 59);border: 1px solid rgb(34, 34, 34);border-radius: 0px;} '
 		+ '.hideTrash {display:none;} '
-		+ '.tabsDiv {overflow:auto;white-space: nowrap;width: 108vh;}'
+		+ '.tabsDiv {overflow:auto;white-space: nowrap;width: 102vh;}'
 		+ '.fileTable {padding: 3px;margin: 2px;background: #333333;color: #b2b3b2;text-decoration: none;text-transform: none;font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", Consolas, "Courier New", Courier, monospace, "Times New Roman";font-weight: 500;font-size: 0.875rem;line-height: 1.75;cursor: pointer;}'
 		+ '.fileTable:hover {background-color: rgb(0, 0, 0);}'
 		+ '.filesToAddTable {background: #c7c7c7;max-width: 200px;position: fixed;right: 156px;top: 54px;z-index: 99999;background-color: rgb(51, 51, 51);border: 1px solid rgb(34, 34, 34);}';

@@ -229,7 +229,7 @@ export async function main(ns) {
 			}
 
 			//idk what is that, but it justbreak the interface (doing it bigger then screen)
-			document.querySelectorAll('#root .MuiBox-root .MuiBox-root')[1].style.height = '98vh';
+			document.querySelectorAll('#root .MuiBox-root .MuiBox-root')[1].style.height = '96vh';
 
 			var btnsHTML = '<button class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root ' + styleCSS + ' minimizeBtn">'
 				+ 'minimize'

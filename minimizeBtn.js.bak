@@ -84,6 +84,7 @@ export async function main(ns) {
 			var scriptPath = elem.getAttribute('data-script-path');
 			terminal("home");
 			terminal("tail " + scriptPath);
+			document.querySelectorAll('.MuiListItem-button')[3].click();
 		} else if (e.code == 'KeyS' && e.ctrlKey || elem.id == 'justSaveBtn') {
 			document.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button')[2].click();
 			document.querySelectorAll('.MuiListItem-button')[3].click();

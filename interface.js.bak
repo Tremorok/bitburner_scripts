@@ -302,6 +302,7 @@ export async function main(ns) {
 		if (curTab == 'editor' && btnElementsDivs && saveAndCloceBtn) {
 			//idk what is that, but it justbreak the interface (doing it bigger then screen)
 			doc.querySelectorAll('#root .MuiBox-root .MuiBox-root')[1].style.height = '98vh';
+			doc.querySelectorAll('#root .MuiBox-root .MuiBox-root')[1].style.width = '85vw';
 
 			var btnsHTML = '<button class="' + userStyles.btns + ' minimizeBtn">'
 				+ 'minimize'
@@ -393,7 +394,9 @@ export async function main(ns) {
 		doc.removeEventListener('keydown', listener);
 		doc.removeEventListener('click', listener);
 		doc.removeEventListener('click', checkWhereClick);
-		int.optBtn.innerHTML += 'options';
+		if (int.optBtn) {
+			int.optBtn.innerHTML += 'options';
+		}
 
 		if (int.tabsDiv) {
 			int.tabsDiv.remove();

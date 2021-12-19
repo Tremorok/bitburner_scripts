@@ -89,6 +89,7 @@ export async function main(ns) {
 			int.tabsDiv = doc.querySelector('.tabsDiv');
 			int.topBarDiv = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root')[0];
 			fileOnEdit = doc.querySelector('.MuiInput-input.MuiInputBase-input.MuiInputBase-inputAdornedStart').value;
+			int.selBtns = getComputedStyle(document.querySelectorAll('.MuiListItem-button')[17].children[1].firstElementChild).color;
 		} else {
 			int.saveAndCloseBtn = null;
 			int.consoleDivs = null;
@@ -99,7 +100,7 @@ export async function main(ns) {
 			int.topBarDiv = null;
 			activeTab = [];
 		}
-		int.selBtns = getComputedStyle(document.querySelectorAll('.MuiListItem-button')[17].children[1].firstElementChild).color;
+		
 		int.termBtn = doc.querySelectorAll('.MuiListItem-button')[2];
 		int.script = doc.querySelectorAll('.MuiListItem-button')[3];
 		int.logBtns = doc.querySelectorAll('.drag.MuiBox-root .MuiBox-root');

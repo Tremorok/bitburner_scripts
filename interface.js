@@ -3,17 +3,14 @@ export async function main(ns) {
 
 	ns.disableLog('sleep');
 
-	var stop = false;
 	var disabledTabs = [];
 	var files = [];
-	var activeTab = [];
-	var fileOnEdit = null;
-	var needToAdd = '';
+	var activeTabs = [];
 	var doc = document;
 	var curTab = null;
 	var scrollLeft = null;
 	var int = {
-		saveAndCloseBtn: null,
+		saveBtn: null,
 		consoleDivs: null,
 		stats: null,
 		logBtns: null,
@@ -28,23 +25,21 @@ export async function main(ns) {
 		selBtns: null,
 	}
 
-	start()
-	//loop needed to add new btns to new log windows
+	start();
 
+	//loop needed to add new btns to new log windows
 	var sm = [".(^-^)'", "-(^-^)-", "'(^-^).", "-(^o^)-", ".(^-^)'", "-(^-^)-", "'(^-^).", "-(^-^)-"];
 	var i = 0;
 	var iter = 0;
-	while (!stop) {
+	while (true) {
 		curTab = getCurTab();
 
 		updateBtns();
-		addDivForTabs();
+		addScrollForTabs();
 		udateStyles();
 
 		updateFiles();
 		addEditMinBtns();
-		addTabs();
-		addSaveBtn();
 		addPlus();
 		optionsSmall();
 		tabsWidth();
@@ -74,31 +69,40 @@ export async function main(ns) {
 	}
 
 	function udateStyles() {
-		if (curTab == 'editor') {
-			userStyles.btns = 'MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root ' + int.saveAndCloseBtn.classList[6];
+		if (curTab == 'editor' && int.saveBtn) {
+			userStyles.btns = 'MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root ' + int.saveBtn.classList[6];
 		}
 	}
 
 	function updateBtns() {
 		if (curTab == 'editor') {
-			int.saveAndCloseBtn = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button')[2];
+			var allBtnsOnPage = document.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
+			for (var i = 0; i < allBtnsOnPage.length; i++) {
+				var btn = allBtnsOnPage[i];
+				if (btn.innerText == 'Save (Ctrl/Cmd + b)') {
+					btn.innerText = 'Save (Ctrl/Cmd + s)';
+					int.saveBtn = btn;
+				} else if (btn.innerText == 'Save (Ctrl/Cmd + s)') {
+					int.saveBtn = btn;
+				}
+			}
+			
 			int.consoleDivs = doc.querySelectorAll('.drag.MuiBox-root .MuiBox-root');
 			int.stats = doc.querySelector('.MuiCollapse-hidden');
 			int.optBtn = doc.querySelectorAll('.MuiButtonBase-root.MuiIconButton-root')[2];
 			int.addBtn = doc.querySelector('.addBtn');
 			int.tabsDiv = doc.querySelector('.tabsDiv');
 			int.topBarDiv = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root')[0];
-			fileOnEdit = doc.querySelector('.MuiInput-input.MuiInputBase-input.MuiInputBase-inputAdornedStart').value;
+			
 			int.selBtns = getComputedStyle(document.querySelectorAll('.MuiListItem-button')[17].children[1].firstElementChild).color;
 		} else {
-			int.saveAndCloseBtn = null;
+			int.saveBtn = null;
 			int.consoleDivs = null;
 			int.stats = null;
 			int.optBtn = null;
 			int.addBtn = null;
 			int.tabsDiv = null;
 			int.topBarDiv = null;
-			activeTab = [];
 		}
 		
 		int.termBtn = doc.querySelectorAll('.MuiListItem-button')[2];
@@ -107,14 +111,10 @@ export async function main(ns) {
 	}
 
 	function start() {
-		var css = '.removeTab { display: inline-flex;-webkit-box-align: center;align-items: center;-webkit-box-pack: center;justify-content: center;position: relative;box-sizing: border-box;-webkit-tap-highlight-color: transparent;outline: 0px;margin-right: 6px;cursor: pointer;user-select: none;vertical-align: middle;appearance: none;text-decoration: none;text-transform: none;font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", Consolas, "Courier New", Courier, monospace, "Times New Roman";font-weight: 500;font-size: 0.875rem;line-height: 1.75;min-width: 28px;padding: 6px 8px;transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;color: rgb(195, 195, 195);background-color: rgb(109 7 7);border: 1px solid rgb(34, 34, 34);border-radius: 0px;} '
-			+ '.removeTab:hover {background:rgb(49 0 0)} '
-			+ '.addBtn { display: inline-flex;-webkit-box-align: center;align-items: center;-webkit-box-pack: center;justify-content: center;position: relative;box-sizing: border-box;-webkit-tap-highlight-color: transparent;outline: 0px;margin-right: 6px;cursor: pointer;user-select: none;vertical-align: middle;appearance: none;text-decoration: none;text-transform: none;font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", Consolas, "Courier New", Courier, monospace, "Times New Roman";font-weight: 500;font-size: 0.875rem;line-height: 1.75;min-width: 28px;padding: 6px 8px;transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;color: rgb(195, 195, 195);background-color: rgb(59 129 59);border: 1px solid rgb(34, 34, 34);border-radius: 0px;} '
-			+ '.hideTrash {display:none;} '
-			+ '.tabsDiv {overflow:auto;white-space: nowrap;}'
+		var css = '.addBtn { display: inline-flex;-webkit-box-align: center;align-items: center;-webkit-box-pack: center;justify-content: center;position: relative;box-sizing: border-box;-webkit-tap-highlight-color: transparent;outline: 0px;margin-right: 6px;cursor: pointer;user-select: none;vertical-align: middle;appearance: none;text-decoration: none;text-transform: none;font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", Consolas, "Courier New", Courier, monospace, "Times New Roman";font-weight: 500;font-size: 0.875rem;line-height: 1.75;min-width: 28px;padding: 6px 8px;transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;color: rgb(195, 195, 195);background-color: rgb(59 129 59);border: 1px solid rgb(34, 34, 34);border-radius: 0px;} '
 			+ '.fileTable {padding: 3px;margin: 2px;background: #333333;color: #b2b3b2;text-decoration: none;text-transform: none;font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", Consolas, "Courier New", Courier, monospace, "Times New Roman";font-weight: 500;font-size: 0.875rem;line-height: 1.75;cursor: pointer;}'
 			+ '.fileTable:hover {background-color: rgb(0, 0, 0);}'
-			+ '.filesToAddTable {background: #c7c7c7;max-width: 200px;position: fixed;right: 156px;top: 54px;z-index: 99999;background-color: rgb(51, 51, 51);border: 1px solid rgb(34, 34, 34);}';
+			+ '.filesToAddTable {background: #c7c7c7;max-width: 200px;position: fixed;left: 264px;top: 52px;z-index: 99999;background-color: rgb(51, 51, 51);border: 1px solid rgb(34, 34, 34);}';
 
 		var style = doc.createElement("div");
 		style.id = 'myCustomStyles';
@@ -139,16 +139,20 @@ export async function main(ns) {
 
 	function toScroll() {
 		if (scrollLeft != null) {
-			int.tabsDiv.scrollLeft = scrollLeft;
+			int.topBarDiv.scrollLeft = scrollLeft;
 			scrollLeft = null;
 		}
 	}
 
 	function tabsWidth() {
-		if (curTab == 'editor' && int.tabsDiv && !int.stats) {
-			int.tabsDiv.style.width = window.innerWidth - (250 + 270 + 40 + 162) + 'px';
-		} else if (curTab == 'editor' && int.tabsDiv && int.stats) {
-			int.tabsDiv.style.width = window.innerWidth - (250 + 270 + 40 + 60) + 'px';
+		if (curTab == 'editor' && int.topBarDiv && !int.stats) {
+			int.topBarDiv.style.width = (window.innerWidth - 265 - 140) + 'px';
+		} else if (curTab == 'editor' && int.topBarDiv && int.stats) {
+			int.topBarDiv.style.width = (window.innerWidth - 265 - 40) + 'px';
+		}
+		if (curTab == 'editor' && int.topBarDiv && int.topBarDiv.style.overflow == '') {
+			int.topBarDiv.style.overflow = 'auto';
+			int.topBarDiv.style.whiteSpace = 'nowrap';
 		}
 	}
 
@@ -158,27 +162,18 @@ export async function main(ns) {
 		}
 	}
 
-	function addDivForTabs() {
-		if (curTab == 'editor' && !int.tabsDiv) {
-			int.topBarDiv.insertAdjacentHTML('beforeEnd', '<div class="tabsDiv"></div>');
-			int.tabsDiv = doc.querySelector('.tabsDiv');
-			doc.querySelector('.tabsDiv').addEventListener('wheel', scrollTabs);
+	function addScrollForTabs() {
+		if (curTab == 'editor' && int.topBarDiv) {
+			int.topBarDiv.addEventListener('wheel', scrollTabs);
 		}
 	}
 
 	function addPlus() {
-		if (curTab == 'editor' && int.tabsDiv && disabledTabs.length != 0 && !int.addBtn) {
-			int.tabsDiv.insertAdjacentHTML('beforeend', '<div class="addBtn">+<div>');
+		if (curTab == 'editor' && disabledTabs.length != 0 && !int.addBtn) {
+			int.topBarDiv.insertAdjacentHTML('afterbegin', '<div class="addBtn">+<div>');
 			doc.querySelector('.addBtn').addEventListener('click', listener);
-			int.tabsDiv.scrollLeft += 40;
-		}
-	}
-
-	function addSaveBtn() {
-		if (curTab == 'editor' && !doc.getElementById('justSaveBtn')) {
-			var saveBtn = '<div id="justSaveBtn" class="' + userStyles.btns + '" style="margin-left: 5px;">Save (Ctrl+s)</div>';
-			int.saveAndCloseBtn.insertAdjacentHTML('afterend', saveBtn);
-			doc.getElementById('justSaveBtn').addEventListener('click', listener);
+		} else if (doc.querySelector('.addBtn') && disabledTabs.length == 0) {
+			doc.querySelector('.addBtn').remove();
 		}
 	}
 
@@ -187,6 +182,24 @@ export async function main(ns) {
 		ns.ls("home", '.ns').forEach(e => files.push(e));
 		ns.ls("home", '.js').forEach(e => files.push(e));
 		ns.ls("home", '.script').forEach(e => files.push(e));
+		if (curTab == 'editor') {
+			var allBtnsOnPage = document.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
+			activeTabs = [];
+			for (var i = 0; i < allBtnsOnPage.length; i++) {
+				var btn = allBtnsOnPage[i];
+				if (btn.value.includes(':') && !btn.innerText.includes('x')) {
+					activeTabs.push(btn.value.split(':')[0]);
+					btn.classList.add("tabBtn");
+				}
+			}
+			disabledTabs = [];
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (!activeTabs.includes(file)) {
+					disabledTabs.push(file);
+				}
+			}
+		}
 	}
 
 	function checkWhereClick(e) {
@@ -199,19 +212,10 @@ export async function main(ns) {
 			doc.querySelector('.filesToAddTable').remove();
 			doc.removeEventListener('click', checkWhereClick);
 		} else if (cList.contains('fileTable')) {
-			needToAdd = elem.innerText;
-			doc.querySelector('.filesToAddTable').remove();
-			var tempArray = [];
-			for (var i = 0; i < disabledTabs.length; i++) {
-				if (disabledTabs[i] == needToAdd) {
-					continue;
-				}
-				tempArray.push(disabledTabs[i]);
-			}
-			disabledTabs = tempArray;
-			if (disabledTabs.length == 0) {
-				int.addBtn.remove();
-			}
+			var newTab = elem.innerText;
+			int.termBtn.click();
+			terminal("home");
+			terminal("nano "+newTab);
 			doc.removeEventListener('click', checkWhereClick);
 		}
 	}
@@ -219,19 +223,15 @@ export async function main(ns) {
 	function listener(e) {
 		var elem = e.target;
 		var cList = elem.classList;
-		if (e.ctrlKey && cList.contains('tabsBtns')) {
-			var scriptPath = elem.getAttribute('data-script-path');
-			scrollLeft = int.tabsDiv.scrollLeft;
+		if (e.ctrlKey && cList.contains('tabBtn') && curTab == 'editor') {
+			var scriptPath = elem.innerText.split(':')[0];
+			scrollLeft = int.topBarDiv.scrollLeft;
 			int.termBtn.click();
 			terminal("home");
 			terminal("tail " + scriptPath);
 			int.script.click();
-			activeTab = [];
-		} else if ((e.code == 'KeyS' && e.ctrlKey || elem.id == 'justSaveBtn') && curTab == 'editor') {
-			scrollLeft = int.tabsDiv.scrollLeft;
-			int.saveAndCloseBtn.click();
-			int.script.click();
-			activeTab = [];
+		} else if ((e.code == 'KeyS' && e.ctrlKey) && curTab == 'editor') {
+			int.saveBtn.click();
 		} else if (cList.contains('minimizeBtn')) {
 			var logDiv = elem.parentElement.parentElement.parentElement.parentElement;
 			var wordSize = logDiv.firstElementChild.firstElementChild.firstElementChild.offsetWidth;
@@ -254,54 +254,27 @@ export async function main(ns) {
 			int.termBtn.click();
 			terminal("home");
 			terminal("nano " + scrName);
-			activeTab = [];
-		} else if (cList.contains('tabsBtns')) {
-			var scriptPath = elem.getAttribute('data-script-path');
-			scrollLeft = int.tabsDiv.scrollLeft;
-			int.termBtn.click();
-			terminal("home");
-			terminal("nano " + scriptPath);
-			activeTab = [];
-		} else if (cList.contains('removeTab')) {
-			var tabId = elem.getAttribute('data-tab-id');
-			var tabDiv = doc.getElementById(tabId);
-			var scrName = tabDiv.attributes[0].value;
-			disabledTabs.push(scrName);
-			tabDiv.remove();
-			elem.remove();
-			if (activeTab.includes(scrName)) {
-				var tempArray = [];
-				for (var i = 0; i < activeTab.length; i++) {
-					if (activeTab[i] == scrName) {
-						continue;
-					}
-					tempArray.push(activeTab[i]);
-				}
-				activeTab = tempArray;
-			}
 		} else if (cList.contains('addBtn')) {
 			if (doc.querySelector('.filesToAddTable')) {
 				doc.querySelector('.filesToAddTable').remove();
 			}
 			var scriptsDivHTML = '<div class="filesToAddTable">'
-			for (var i = 0; i < files.length; i++) {
-				var file = files[i];
-				if (!activeTab.includes(file)) {
-					scriptsDivHTML += '<div class="fileTable">' + file + '</div>';
-				}
+			for (var i = 0; i < disabledTabs.length; i++) {
+				var tab = disabledTabs[i];
+				scriptsDivHTML += '<div class="fileTable">' + tab + '</div>';
 			}
 			scriptsDivHTML += '</div>';
-			int.tabsDiv.insertAdjacentHTML('afterend', scriptsDivHTML);
+			int.topBarDiv.insertAdjacentHTML('afterend', scriptsDivHTML);
 			doc.addEventListener('click', checkWhereClick);
 		}
 	}
 
 	function addEditMinBtns() {
 		var btnElementsDivs = doc.querySelectorAll('.drag.MuiBox-root .MuiBox-root');
-		var saveAndCloceBtn = int.saveAndCloseBtn;
+		var saveAndCloceBtn = int.saveBtn;
 
 		if (curTab == 'editor' && btnElementsDivs && saveAndCloceBtn) {
-			//idk what is that, but it justbreak the interface (doing it bigger then screen)
+			//tahts fixing some of interface size
 			doc.querySelectorAll('#root .MuiBox-root .MuiBox-root')[1].style.height = '98vh';
 			doc.querySelectorAll('#root .MuiBox-root .MuiBox-root')[1].style.width = '85vw';
 
@@ -316,7 +289,7 @@ export async function main(ns) {
 				var elContBtn = element.firstElementChild.classList.contains('minimizeBtn');
 				if (elContBtn) {
 					continue;
-				} else if (!stop) {
+				} else {
 					element.insertAdjacentHTML('afterbegin', btnsHTML);
 					element.getElementsByClassName('minimizeBtn')[0].addEventListener('click', listener);
 					element.getElementsByClassName('editBtn')[0].addEventListener('click', listener);
@@ -329,67 +302,20 @@ export async function main(ns) {
 		this.scrollLeft = this.scrollLeft + (event.deltaY + event.deltaX);
 	}
 
-	function addTabs() {
-		if (curTab == 'editor') {
-			var tabHTMLExemplar = '<div data-script-path="#$tabPath" id="#$tabId" #$Style class="' + userStyles.btns + ' tabsBtns">'
-				+ '#$tabName'
-				+ '</div>'
-				+ '<div data-tab-id="#$tabId" id="#$rmBtnId" class="removeTab">X<div>';
-
-			if (activeTab.length == 0) {
-				for (var i = 0; i < files.length; i++) {
-					var file = files[i];
-					if (disabledTabs.includes(file)) {
-						continue;
-					}
-
-					activeTab.push(file);
-
-					var rmBtnId = 'rem-id-' + i;
-					var tabId = 'tab-id-' + i;
-					var tabName = file;
-					insertTabs(tabName, tabId, tabName, rmBtnId);
-				}
-			} else if (needToAdd != '') {
-				var rmBtnId = 'rem-id-' + activeTab.length;
-				var tabId = 'tab-id-' + activeTab.length;
-				var tabName = needToAdd;
-				insertTabs(needToAdd, tabId, tabName, rmBtnId);
-				activeTab.push(needToAdd);
-				needToAdd = '';
-			}
-		}
-
-		function insertTabs(tabPath, tabId, tabName, rmBtnId) {
-			var tabHTML = tabHTMLExemplar
-				.replaceAll('#$tabPath', tabPath)
-				.replaceAll('#$tabId', tabId)
-				.replaceAll('#$tabName', tabName)
-				.replaceAll('#$rmBtnId', rmBtnId);
-			if (tabName != fileOnEdit) {
-				tabHTML = tabHTML.replaceAll('#$Style', 'style="color:' + int.selBtns + ';"');
-			} else {
-				tabHTML = tabHTML.replaceAll('#$Style', '');
-			}
-
-			if (int.addBtn) {
-				int.addBtn.insertAdjacentHTML('beforebegin', tabHTML);
-			} else {
-				int.tabsDiv.insertAdjacentHTML('beforeend', tabHTML);
-			}
-			doc.getElementById(rmBtnId).addEventListener('click', listener)
-			doc.getElementById(tabId).addEventListener('click', listener);
-		}
-
-	}
-
 	function onExit() {
-		stop = true; //we need it, coz script doing last cycle before end
 		if (doc.querySelectorAll('.minimizeBtn')) {
 			doc.querySelectorAll('.minimizeBtn').forEach(e => e.remove());
 		}
 		if (doc.querySelectorAll('.editBtn')) {
 			doc.querySelectorAll('.editBtn').forEach(e => e.remove());
+		}
+
+		if (curTab == 'editor') {
+			int.saveBtn.innerText = 'Save (Ctrl/Cmd + b)';
+		}
+
+		if (int.addBtn) {
+			int.addBtn.remove();
 		}
 
 		doc.removeEventListener('keydown', listener);
@@ -399,9 +325,8 @@ export async function main(ns) {
 			int.optBtn.innerHTML += 'options';
 		}
 
-		if (int.tabsDiv) {
-			int.tabsDiv.remove();
-			int.tabsDiv.removeEventListener('wheel', scrollTabs);
+		if (int.topBarDiv) {
+			int.topBarDiv.removeEventListener('wheel', scrollTabs);
 		}
 
 		var logWindows = doc.querySelectorAll('.drag.MuiBox-root');
@@ -411,9 +336,6 @@ export async function main(ns) {
 				logDiv.style.width = '';
 				logDiv.style.height = '';
 			}
-		}
-		if (doc.getElementById('justSaveBtn')) {
-			doc.getElementById('justSaveBtn').remove()
 		}
 	}
 

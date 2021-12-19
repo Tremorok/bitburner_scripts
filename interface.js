@@ -76,7 +76,7 @@ export async function main(ns) {
 
 	function updateBtns() {
 		if (curTab == 'editor') {
-			var allBtnsOnPage = document.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
+			var allBtnsOnPage = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
 			for (var i = 0; i < allBtnsOnPage.length; i++) {
 				var btn = allBtnsOnPage[i];
 				if (btn.innerText == 'Save (Ctrl/Cmd + b)') {
@@ -94,7 +94,7 @@ export async function main(ns) {
 			int.tabsDiv = doc.querySelector('.tabsDiv');
 			int.topBarDiv = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root')[0];
 			
-			int.selBtns = getComputedStyle(document.querySelectorAll('.MuiListItem-button')[17].children[1].firstElementChild).color;
+			int.selBtns = getComputedStyle(doc.querySelectorAll('.MuiListItem-button')[17].children[1].firstElementChild).color;
 		} else {
 			int.saveBtn = null;
 			int.consoleDivs = null;
@@ -183,7 +183,7 @@ export async function main(ns) {
 		ns.ls("home", '.js').forEach(e => files.push(e));
 		ns.ls("home", '.script').forEach(e => files.push(e));
 		if (curTab == 'editor') {
-			var allBtnsOnPage = document.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
+			var allBtnsOnPage = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
 			activeTabs = [];
 			for (var i = 0; i < allBtnsOnPage.length; i++) {
 				var btn = allBtnsOnPage[i];

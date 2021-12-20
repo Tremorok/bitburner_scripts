@@ -80,7 +80,7 @@ export async function main(ns) {
 			var allBtnsOnPage = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
 			for (var i = 0; i < allBtnsOnPage.length; i++) {
 				var btn = allBtnsOnPage[i];
-				if (btn.innerText == 'Save (Ctrl/Cmd + s)') {
+				if (btn.innerText == 'Save & Close (Ctrl/Cmd + s)') {
 					int.saveBtn = btn;
 				}
 			}

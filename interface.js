@@ -80,10 +80,7 @@ export async function main(ns) {
 			var allBtnsOnPage = doc.querySelectorAll('#root .MuiBox-root .MuiBox-root .MuiBox-root .MuiBox-root button.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButtonBase-root');
 			for (var i = 0; i < allBtnsOnPage.length; i++) {
 				var btn = allBtnsOnPage[i];
-				if (btn.innerText == 'Save (Ctrl/Cmd + b)') {
-					btn.innerText = 'Save (Ctrl/Cmd + s)';
-					int.saveBtn = btn;
-				} else if (btn.innerText == 'Save (Ctrl/Cmd + s)') {
+				if (btn.innerText == 'Save (Ctrl/Cmd + s)') {
 					int.saveBtn = btn;
 				}
 			}
@@ -188,8 +185,8 @@ export async function main(ns) {
 			activeTabs = [];
 			for (var i = 0; i < allBtnsOnPage.length; i++) {
 				var btn = allBtnsOnPage[i];
-				if (btn.value.includes(':') && !btn.innerText.includes('x')) {
-					activeTabs.push(btn.value.split(':')[0]);
+				if (btn.innerText.includes(':~/') && !btn.innerText.includes('x')) {
+					activeTabs.push(btn.innerText.split(':~/')[1]);
 					btn.classList.add("tabBtn");
 				}
 			}
@@ -225,21 +222,25 @@ export async function main(ns) {
 		var elem = e.target;
 		var cList = elem.classList;
 		if (e.ctrlKey && cList.contains('tabBtn') && curTab == 'editor') {
-			var scriptPath = elem.innerText.split(':')[0];
+			var scriptPath = elem.innerText.split(':~/')[1];
 			scrollLeft = int.topBarDiv.scrollLeft;
 			int.termBtn.click();
 			terminal("home");
 			terminal("tail " + scriptPath);
 			int.script.click();
 		} else if (e.shiftKey && cList.contains('tabBtn') && curTab == 'editor') {
-			var scriptPath = elem.innerText.split(':')[0];
+			var scriptPath = elem.innerText.split(':~/')[1];
 			scrollLeft = int.topBarDiv.scrollLeft;
 			int.termBtn.click();
 			terminal("home");
 			terminal("run " + scriptPath);
 			int.script.click();
 		} else if ((e.code == 'KeyS' && e.ctrlKey) && curTab == 'editor') {
-			int.saveBtn.click();
+			setTimeout(function() {
+				int.script.click();
+			},20)
+			
+			
 		} else if (cList.contains('minimizeBtn')) {
 			var logDiv = elem.parentElement.parentElement.parentElement.parentElement;
 			var wordSize = logDiv.firstElementChild.firstElementChild.firstElementChild.offsetWidth;
@@ -316,10 +317,6 @@ export async function main(ns) {
 		}
 		if (doc.querySelectorAll('.editBtn')) {
 			doc.querySelectorAll('.editBtn').forEach(e => e.remove());
-		}
-
-		if (curTab == 'editor') {
-			int.saveBtn.innerText = 'Save (Ctrl/Cmd + b)';
 		}
 
 		if (int.addBtn) {

@@ -50,6 +50,7 @@ export async function main(ns) {
 			ns.print('WARN Script started!');
 			ns.print('INFO added several hotkeys, like ctrl+s');
 			ns.print('INFO if you click on tab with pushed ctrl, its open log of this script. (if this script runned)');
+			ns.print('INFO if you click on tab with pushed shift, its run thix script. (script run without args)');
 			ns.print('INFO You can add and delete tabs.');
 			ns.print('INFO Top menu with tabs, scrolable.');
 			ns.print(sm[i] + sm[i] + sm[i] + sm[i] + sm[i] + sm[i]);
@@ -229,6 +230,13 @@ export async function main(ns) {
 			int.termBtn.click();
 			terminal("home");
 			terminal("tail " + scriptPath);
+			int.script.click();
+		} else if (e.shiftKey && cList.contains('tabBtn') && curTab == 'editor') {
+			var scriptPath = elem.innerText.split(':')[0];
+			scrollLeft = int.topBarDiv.scrollLeft;
+			int.termBtn.click();
+			terminal("home");
+			terminal("run " + scriptPath);
 			int.script.click();
 		} else if ((e.code == 'KeyS' && e.ctrlKey) && curTab == 'editor') {
 			int.saveBtn.click();
